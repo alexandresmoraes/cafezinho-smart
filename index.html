@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CaféZinho Smart</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        :root {
+            --primary: #27ae60;
+            --primary-dark: #1e8449;
+            --secondary: #3498db;
+            --dark: #2c3e50;
+            --danger: #e74c3c;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --light: #f8fafc;
+            --border: #e5e7eb;
+        }
+
+        body {
+            background: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 24px;
+            border-radius: 16px;
+            margin-bottom: 24px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .header-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 16px;
+        }
+
+        .wifi-status {
+            font-size: 0.875rem;
+            opacity: 0.9;
+        }
+
+        .nav {
+            display: flex;
+            background: white;
+            border-radius: 12px;
+            padding: 4px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .nav-btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            background: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .nav-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+        }
+
+        .card h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            background: var(--light);
+            margin-bottom: 16px;
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #6b7280;
+        }
+
+        .status.on .status-dot {
+            background: var(--success);
+            box-shadow: 0 0 0 3px rgba(16,185,129,0.2);
+        }
+
+        .status.off .status-dot {
+            background: var(--danger);
+        }
+
+        .status.auto .status-dot {
+            background: var(--primary);
+        }
+
+        .status-text {
+            font-weight: 600;
+            font-size: 1.125rem;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #6b7280;
+            color: white;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .next-coffee {
+            text-align: center;
+            margin: 16px 0;
+        }
+
+        .coffee-time {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .coffee-info {
+            background: var(--light);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+        }
+
+        .coffee-day {
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+
+        .coffee-countdown {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .form-help {
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-top: 4px;
+        }
+
+        .days-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .day-btn {
+            padding: 12px;
+            border: 2px solid var(--border);
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .day-btn.selected {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: white;
+        }
+
+        .switch-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .switch-group:last-child {
+            border-bottom: none;
+        }
+
+        .switch {
+            position: relative;
+            width: 48px;
+            height: 24px;
+            background: #d1d5db;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .switch.active {
+            background: var(--primary);
+        }
+
+        .switch-handle {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.2s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .switch.active .switch-handle {
+            transform: translateX(24px);
+        }
+
+        .history {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .history-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        .history-icon {
+            font-size: 1.5rem;
+        }
+
+        .history-details h4 {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .history-details p {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        .history-time {
+            margin-left: auto;
+            text-align: right;
+            font-size: 0.875rem;
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--dark);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .wifi-warning {
+            background: #fef3c7;
+            border: 1px solid #f59e0b;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            font-size: 0.875rem;
+            color: #92400e;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 16px;
+            }
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            .coffee-time {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>☕ CaféZinho Smart</h1>
+            <p>Seu café na hora certa, do jeito que você gosta!</p>
+            <div class="header-info">
+                <div class="wifi-status" id="wifi-name">Carregando...</div>
+                <div class="wifi-status" id="current-time">--:-- - --/--/----</div>
+            </div>
+        </header>
+
+        <nav class="nav">
+            <button class="nav-btn active" data-tab="dashboard">☕ Painel</button>
+            <button class="nav-btn" data-tab="schedule">⏰ Programar</button>
+            <button class="nav-btn" data-tab="config">⚙️ Configurações</button>
+        </nav>
+
+        <div id="dashboard" class="tab-content active">
+            <div class="grid">
+                <div class="card">
+                    <h3>☕ Status da Cafeteira</h3>
+                    <div class="status" id="coffee-status">
+                        <div class="status-dot"></div>
+                        <div class="status-text">Carregando...</div>
+                    </div>
+                    <p id="coffee-desc">Aguarde...</p>
+                    <button class="btn btn-primary" id="power-btn" disabled>Carregando...</button>
+                </div>
+
+                <div class="card">
+                    <h3>🤖 Modo de Operação</h3>
+                    <div class="status" id="mode-status">
+                        <div class="status-dot"></div>
+                        <div class="status-text">Carregando...</div>
+                    </div>
+                    <p id="mode-desc">Aguarde...</p>
+                    <button class="btn btn-secondary" id="toggle-mode" disabled>Carregando...</button>
+                </div>
+
+                <div class="card">
+                    <h3>⏰ Próximo Café</h3>
+                    <div class="next-coffee">
+                        <div class="coffee-time" id="next-coffee">--:--</div>
+                        <div class="coffee-info" id="next-coffee-info" style="display: none;">
+                            <div class="coffee-day" id="next-coffee-day">-</div>
+                            <div class="coffee-countdown" id="next-coffee-countdown">-</div>
+                        </div>
+                    </div>
+                    <p id="next-coffee-desc">Carregando...</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>📊 Histórico</h3>
+                <div class="history" id="history-container">
+                    <div style="text-align: center; padding: 40px; color: #6b7280;">
+                        Carregando histórico...
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="schedule" class="tab-content">
+            <div class="card">
+                <h3>⏰ Programar Horários</h3>
+                
+                <div class="form-group">
+                    <label>Horário de Ligar:</label>
+                    <input type="time" id="schedule-time" class="form-control" value="07:00">
+                    <div class="form-help">Hora que a cafeteira deve ligar automaticamente</div>
+                </div>
+
+                <div class="form-group">
+                    <label>Dias da Semana:</label>
+                    <div class="days-grid" id="days-grid">
+                        <div class="day-btn selected" data-day="monday">Seg</div>
+                        <div class="day-btn selected" data-day="tuesday">Ter</div>
+                        <div class="day-btn selected" data-day="wednesday">Qua</div>
+                        <div class="day-btn selected" data-day="thursday">Qui</div>
+                        <div class="day-btn selected" data-day="friday">Sex</div>
+                        <div class="day-btn" data-day="saturday">Sáb</div>
+                        <div class="day-btn" data-day="sunday">Dom</div>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 12px;">
+                    <button class="btn btn-success" id="save-schedule" style="flex: 1;">💾 Salvar Programação</button>
+                    <button class="btn btn-secondary" id="toggle-all-days" style="flex: 1;">✅ Alternar Todos</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="config" class="tab-content">
+            <div class="card">
+                <h3>🌐 Configurações WiFi</h3>
+                
+                <div class="wifi-warning">
+                    ⚠️ <strong>Atenção:</strong> Deixe os campos em branco para manter as configurações WiFi atuais. Preencha apenas se desejar alterar a rede.
+                </div>
+                
+                <div class="form-group">
+                    <label>Nome da Rede WiFi:</label>
+                    <input type="text" id="wifi-ssid" class="form-control" placeholder="Deixe vazio para manter atual">
+                    <div class="form-help">Digite o nome da nova rede ou deixe vazio para não alterar</div>
+                </div>
+
+                <div class="form-group">
+                    <label>Senha do WiFi:</label>
+                    <input type="password" id="wifi-password" class="form-control" placeholder="Deixe vazio para manter atual">
+                    <div class="form-help">Digite a senha da nova rede ou deixe vazio para não alterar</div>
+                </div>
+            </div>
+
+            <div class="card" style="margin-top: 20px;">
+                <h3>🔧 Configurações Avançadas</h3>
+                
+                <div class="switch-group">
+                    <div>
+                        <strong>Modo Automático</strong>
+                        <p style="font-size: 0.875rem; color: #6b7280;">Ativar programação de horários</p>
+                    </div>
+                    <div class="switch" id="auto-mode-switch">
+                        <div class="switch-handle"></div>
+                    </div>
+                </div>
+
+                <div class="switch-group">
+                    <div>
+                        <strong>Desligamento Automático</strong>
+                        <p style="font-size: 0.875rem; color: #6b7280;">Programar horário para desligar</p>
+                    </div>
+                    <div class="switch" id="auto-off-switch">
+                        <div class="switch-handle"></div>
+                    </div>
+                </div>
+
+                <div class="form-group" id="auto-off-time-group" style="display: none;">
+                    <label>Horário para Desligar:</label>
+                    <input type="time" id="auto-off-time" class="form-control" value="18:00">
+                    <div class="form-help">Hora para desligar automaticamente</div>
+                </div>
+
+                <div style="display: flex; gap: 12px;">
+                    <button class="btn btn-success" id="save-config" style="flex: 1;">💾 Salvar</button>
+                    <button class="btn btn-secondary" id="reset-config" style="flex: 1;">🔄 Resetar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        class CafeZinho {
+            constructor() {
+                this.state = {
+                    coffeeOn: false,
+                    autoMode: false,
+                    scheduleActive: false,
+                    scheduleTime: '07:00',
+                    scheduleDays: 'monday,tuesday,wednesday,thursday,friday',
+                    autoOffEnabled: false,
+                    autoOffTime: '18:00',
+                    wifiConnected: false,
+                    currentTime: '--:--',
+                    currentDate: '--/--/----',
+                    wifiSSID: '',
+                    wifiSignal: 0
+                };
+
+                this.lastScheduleTimestamp = 0;
+                this.lastAdvancedTimestamp = 0;
+                this.isInitialLoad = true;
+
+                this.init();
+            }
+
+            async init() {
+                console.log('Inicializando CaféZinho Smart...');
+                
+                this.setupTabs();
+                this.setupDays();
+                this.setupSwitches();
+                this.setupEvents();
+                
+                await this.loadStatus();
+                await this.loadHistory();
+                
+                setInterval(() => {
+                    this.loadStatus();
+                    this.loadHistory();
+                }, 10000);
+                
+                console.log('Sistema pronto!');
+            }
+
+            setupTabs() {
+                document.querySelectorAll('.nav-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+                        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                        
+                        btn.classList.add('active');
+                        document.getElementById(btn.dataset.tab).classList.add('active');
+                    });
+                });
+            }
+
+            setupDays() {
+                document.querySelectorAll('.day-btn').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        btn.classList.toggle('selected');
+                    });
+                });
+            }
+
+            setupSwitches() {
+                document.querySelectorAll('.switch').forEach(sw => {
+                    sw.addEventListener('click', () => {
+                        sw.classList.toggle('active');
+                        
+                        if (sw.id === 'auto-off-switch') {
+                            const isActive = sw.classList.contains('active');
+                            document.getElementById('auto-off-time-group').style.display = isActive ? 'block' : 'none';
+                        }
+                    });
+                });
+            }
+
+            setupEvents() {
+                document.getElementById('power-btn').addEventListener('click', () => this.toggleCoffee());
+                document.getElementById('toggle-mode').addEventListener('click', () => this.toggleMode());
+                document.getElementById('toggle-all-days').addEventListener('click', () => this.toggleAllDays());
+                document.getElementById('save-schedule').addEventListener('click', () => this.saveSchedule());
+                document.getElementById('save-config').addEventListener('click', () => this.saveConfig());
+                document.getElementById('reset-config').addEventListener('click', () => this.resetConfig());
+            }
+
+            async api(endpoint, options = {}) {
+                try {
+                    const response = await fetch(`/api/${endpoint}`, {
+                        headers: { 'Content-Type': 'application/json' },
+                        ...options
+                    });
+                    return await response.json();
+                } catch (error) {
+                    console.error('API Error:', error);
+                    this.showToast('Erro de comunicação');
+                    return null;
+                }
+            }
+
+            async loadStatus() {
+                const status = await this.api('status');
+                if (!status) return;
+
+                // Verificar timestamps por seção
+                const scheduleChanged = status.scheduleConfigTimestamp && 
+                                      status.scheduleConfigTimestamp !== this.lastScheduleTimestamp;
+                                      
+                const advancedChanged = status.advancedConfigTimestamp && 
+                                      status.advancedConfigTimestamp !== this.lastAdvancedTimestamp;
+                
+                if (scheduleChanged || advancedChanged || this.isInitialLoad) {
+                    if (scheduleChanged || this.isInitialLoad) {
+                        console.log('Atualizando campos de horários');
+                        this.lastScheduleTimestamp = status.scheduleConfigTimestamp;
+                        this.loadScheduleFields(status);
+                    }
+                    
+                    if (advancedChanged || this.isInitialLoad) {
+                        console.log('Atualizando campos avançados');
+                        this.lastAdvancedTimestamp = status.advancedConfigTimestamp;
+                        this.loadAdvancedFields(status);
+                    }
+                    
+                    this.isInitialLoad = false;
+                }
+
+                this.state = { ...this.state, ...status };
+                this.updateDisplay();
+            }
+
+            loadScheduleFields(status) {
+                if (status.scheduleTime) {
+                    document.getElementById('schedule-time').value = status.scheduleTime;
+                }
+                
+                document.querySelectorAll('.day-btn').forEach(btn => btn.classList.remove('selected'));
+                if (status.scheduleDays) {
+                    status.scheduleDays.split(',').forEach(day => {
+                        const btn = document.querySelector(`[data-day="${day}"]`);
+                        if (btn) btn.classList.add('selected');
+                    });
+                }
+            }
+
+            loadAdvancedFields(status) {
+                document.getElementById('auto-mode-switch').classList.toggle('active', status.autoMode);
+                document.getElementById('auto-off-switch').classList.toggle('active', status.autoOffEnabled);
+                document.getElementById('auto-off-time-group').style.display = status.autoOffEnabled ? 'block' : 'none';
+                
+                if (status.autoOffTime) {
+                    document.getElementById('auto-off-time').value = status.autoOffTime;
+                }
+                
+                // Campos WiFi sempre ficam limpos
+                document.getElementById('wifi-ssid').value = '';
+                document.getElementById('wifi-password').value = '';
+            }
+
+            async loadHistory() {
+                const data = await this.api('history');
+                if (!data?.history) return;
+                this.updateHistory(data.history);
+            }
+
+            updateDisplay() {
+                document.getElementById('current-time').textContent = `${this.state.currentTime} - ${this.state.currentDate}`;
+                
+                if (this.state.wifiConnected && this.state.wifiSSID) {
+                    document.getElementById('wifi-name').textContent = `📶 ${this.state.wifiSSID} (${this.state.wifiSignal || 0}%)`;
+                } else {
+                    document.getElementById('wifi-name').textContent = '📶 Modo AP - CafeZinho-Setup';
+                }
+
+                const coffeeStatus = document.getElementById('coffee-status');
+                const powerBtn = document.getElementById('power-btn');
+                
+                if (this.state.coffeeOn) {
+                    coffeeStatus.className = 'status on';
+                    coffeeStatus.querySelector('.status-text').textContent = 'Ligada';
+                    document.getElementById('coffee-desc').textContent = 'Funcionando normalmente';
+                    powerBtn.textContent = 'Desligar';
+                    powerBtn.className = 'btn btn-danger';
+                } else {
+                    coffeeStatus.className = 'status off';
+                    coffeeStatus.querySelector('.status-text').textContent = 'Desligada';
+                    document.getElementById('coffee-desc').textContent = 'Pronta para usar';
+                    powerBtn.textContent = 'Ligar';
+                    powerBtn.className = 'btn btn-success';
+                }
+
+                const modeStatus = document.getElementById('mode-status');
+                const toggleModeBtn = document.getElementById('toggle-mode');
+                
+                if (this.state.autoMode) {
+                    modeStatus.className = 'status auto';
+                    modeStatus.querySelector('.status-text').textContent = 'Automático';
+                    document.getElementById('mode-desc').textContent = 'Horários programados ativos';
+                    toggleModeBtn.textContent = 'Modo Manual';
+                } else {
+                    modeStatus.className = 'status off';
+                    modeStatus.querySelector('.status-text').textContent = 'Manual';
+                    document.getElementById('mode-desc').textContent = 'Controle manual ativo';
+                    toggleModeBtn.textContent = 'Modo Automático';
+                }
+
+                const nextCoffee = this.calculateNextCoffee();
+                document.getElementById('next-coffee').textContent = nextCoffee.time;
+                document.getElementById('next-coffee-day').textContent = nextCoffee.day;
+                document.getElementById('next-coffee-countdown').textContent = nextCoffee.countdown;
+                
+                const isScheduleValid = this.state.autoMode && this.state.scheduleTime && this.state.scheduleDays;
+                const nextCoffeeInfo = document.getElementById('next-coffee-info');
+                
+                if (isScheduleValid && nextCoffee.time !== '--:--') {
+                    nextCoffeeInfo.style.display = 'block';
+                    document.getElementById('next-coffee-desc').textContent = this.getDaysText();
+                } else {
+                    nextCoffeeInfo.style.display = 'none';
+                    document.getElementById('next-coffee-desc').textContent = this.state.autoMode ? 
+                        'Configure os horários' : 'Ative o modo automático';
+                }
+
+                powerBtn.disabled = false;
+                toggleModeBtn.disabled = false;
+            }
+
+            calculateNextCoffee() {
+                const isActive = this.state.autoMode && this.state.scheduleTime && this.state.scheduleDays && this.state.wifiConnected;
+                
+                if (!isActive) {
+                    return { time: '--:--', day: 'Desativado', countdown: 'Configure primeiro' };
+                }
+
+                const selectedDays = this.state.scheduleDays.split(',');
+                if (selectedDays.length === 0) {
+                    return { time: '--:--', day: 'Sem dias', countdown: 'Selecione os dias' };
+                }
+
+                const now = new Date();
+                const currentDay = now.getDay();
+                const currentTime = now.getHours() * 60 + now.getMinutes();
+                
+                const [hour, min] = this.state.scheduleTime.split(':').map(Number);
+                const scheduleTime = hour * 60 + min;
+
+                const dayMap = { sunday: 0, monday: 1, tuesday: 2, wednesday: 3, thursday: 4, friday: 5, saturday: 6 };
+                const dayNames = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+                
+                const selectedNumbers = selectedDays.map(d => dayMap[d]).sort((a, b) => a - b);
+
+                let nextDay = null;
+                let daysUntil = 0;
+
+                if (selectedNumbers.includes(currentDay) && currentTime < scheduleTime) {
+                    nextDay = currentDay;
+                    daysUntil = 0;
+                } else {
+                    for (let i = 1; i <= 7; i++) {
+                        const checkDay = (currentDay + i) % 7;
+                        if (selectedNumbers.includes(checkDay)) {
+                            nextDay = checkDay;
+                            daysUntil = i;
+                            break;
+                        }
+                    }
+                }
+
+                if (nextDay === null) {
+                    return { time: '--:--', day: 'Erro', countdown: 'Verifique configuração' };
+                }
+
+                let countdown = '';
+                if (daysUntil === 0) {
+                    const minutesUntil = scheduleTime - currentTime;
+                    const hoursUntil = Math.floor(minutesUntil / 60);
+                    const minsUntil = minutesUntil % 60;
+                    countdown = `Em ${hoursUntil}h ${minsUntil}m`;
+                } else if (daysUntil === 1) {
+                    countdown = 'Amanhã';
+                } else {
+                    countdown = `Em ${daysUntil} dias`;
+                }
+
+                return {
+                    time: this.state.scheduleTime,
+                    day: dayNames[nextDay],
+                    countdown: countdown
+                };
+            }
+
+            getDaysText() {
+                if (!this.state.scheduleDays) return 'Nenhum dia';
+                
+                const days = this.state.scheduleDays.split(',');
+                if (days.length === 7) return 'Todos os dias';
+                if (days.length === 5 && !days.includes('saturday') && !days.includes('sunday')) {
+                    return 'Dias úteis';
+                }
+                if (days.length === 2 && days.includes('saturday') && days.includes('sunday')) {
+                    return 'Fins de semana';
+                }
+                
+                const dayNames = {
+                    monday: 'Seg', tuesday: 'Ter', wednesday: 'Qua',
+                    thursday: 'Qui', friday: 'Sex', saturday: 'Sáb', sunday: 'Dom'
+                };
+                
+                return days.map(d => dayNames[d]).join(', ');
+            }
+
+            updateHistory(history) {
+                const container = document.getElementById('history-container');
+                
+                if (!history || history.length === 0) {
+                    container.innerHTML = '<div style="text-align: center; padding: 40px; color: #6b7280;">Nenhum histórico ainda</div>';
+                    return;
+                }
+
+                const html = history.map(item => {
+                    const icons = {
+                        'on-manual': '🔌', 'off-manual': '⏹️',
+                        'on-scheduled': '⏰', 'off-automatic': '🔄'
+                    };
+                    
+                    const icon = icons[`${item.action}-${item.type}`] || (item.action === 'on' ? '🟢' : '🔴');
+                    const actionText = item.action === 'on' ? 'Cafeteira Ligada' : 'Cafeteira Desligada';
+                    const typeTexts = {
+                        manual: 'Acionamento manual',
+                        automatic: 'Desligamento automático', 
+                        scheduled: 'Horário programado'
+                    };
+
+                    return `
+                        <div class="history-item">
+                            <div class="history-icon">${icon}</div>
+                            <div class="history-details">
+                                <h4>${actionText}</h4>
+                                <p>${typeTexts[item.type] || item.type}</p>
+                            </div>
+                            <div class="history-time">
+                                <div>${item.time}</div>
+                                <div>${item.date}</div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                container.innerHTML = html;
+            }
+
+            async toggleCoffee() {
+                const newState = !this.state.coffeeOn;
+                const result = await this.api('coffee', {
+                    method: 'POST',
+                    body: JSON.stringify({ state: newState })
+                });
+                
+                if (result?.success) {
+                    this.state.coffeeOn = newState;
+                    this.updateDisplay();
+                    this.showToast(newState ? 'Cafeteira ligada!' : 'Cafeteira desligada');
+                    setTimeout(() => this.loadHistory(), 500);
+                }
+            }
+
+            toggleMode() {
+                this.state.autoMode = !this.state.autoMode;
+                document.getElementById('auto-mode-switch').classList.toggle('active', this.state.autoMode);
+                this.updateDisplay();
+                this.showToast(`Modo ${this.state.autoMode ? 'automático' : 'manual'} ativado`);
+            }
+
+            toggleAllDays() {
+                const selected = document.querySelectorAll('.day-btn.selected');
+                const allSelected = selected.length === 7;
+                
+                document.querySelectorAll('.day-btn').forEach(btn => {
+                    btn.classList.toggle('selected', !allSelected);
+                });
+            }
+
+            getSelectedDays() {
+                const selected = [];
+                document.querySelectorAll('.day-btn.selected').forEach(btn => {
+                    selected.push(btn.dataset.day);
+                });
+                return selected.join(',');
+            }
+
+            async saveSchedule() {
+                const time = document.getElementById('schedule-time').value;
+                const days = this.getSelectedDays();
+                
+                if (!time || !days) {
+                    this.showToast('Configure horário e dias');
+                    return;
+                }
+
+                const config = {
+                    scheduleTime: time,
+                    scheduleDays: days
+                };
+
+                const result = await this.api('config', {
+                    method: 'POST',
+                    body: JSON.stringify(config)
+                });
+
+                if (result?.success) {
+                    this.showToast('Programação salva com sucesso!');
+                } else {
+                    this.showToast('Erro ao salvar programação');
+                }
+            }
+
+            async saveConfig() {
+                const wifiSSID = document.getElementById('wifi-ssid').value.trim();
+                const wifiPassword = document.getElementById('wifi-password').value;
+                
+                const config = {
+                    autoMode: document.getElementById('auto-mode-switch').classList.contains('active'),
+                    autoOffEnabled: document.getElementById('auto-off-switch').classList.contains('active'),
+                    autoOffTime: document.getElementById('auto-off-time').value
+                };
+                
+                if (wifiSSID.length > 0) {
+                    config.wifiSSID = wifiSSID;
+                    config.wifiPassword = wifiPassword;
+                    this.showToast('Salvando e reconectando WiFi...');
+                } else {
+                    this.showToast('Salvando configurações...');
+                }
+
+                const result = await this.api('config', {
+                    method: 'POST',
+                    body: JSON.stringify(config)
+                });
+
+                if (result?.success) {
+                    if (result.wifiChanged) {
+                        this.showToast('WiFi alterado! Aguarde reconexão...');
+                        document.getElementById('wifi-ssid').value = '';
+                        document.getElementById('wifi-password').value = '';
+                        
+                        setTimeout(() => {
+                            this.showToast('Recarregando página...');
+                            setTimeout(() => location.reload(), 2000);
+                        }, 3000);
+                    } else {
+                        this.showToast('Configurações salvas com sucesso!');
+                    }
+                } else {
+                    this.showToast('Erro ao salvar configurações');
+                }
+            }
+
+            resetConfig() {
+                if (!confirm('Resetar todas as configurações?')) return;
+                
+                document.getElementById('auto-mode-switch').classList.remove('active');
+                document.getElementById('auto-off-switch').classList.remove('active');
+                document.getElementById('auto-off-time-group').style.display = 'none';
+                document.getElementById('wifi-ssid').value = '';
+                document.getElementById('wifi-password').value = '';
+                document.getElementById('schedule-time').value = '07:00';
+                document.getElementById('auto-off-time').value = '18:00';
+                
+                document.querySelectorAll('.day-btn').forEach(btn => btn.classList.remove('selected'));
+                ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'].forEach(day => {
+                    document.querySelector(`[data-day="${day}"]`).classList.add('selected');
+                });
+                
+                this.showToast('Campos resetados!');
+            }
+
+            showToast(message) {
+                const toast = document.getElementById('toast');
+                toast.textContent = message;
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 3000);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            new CafeZinho();
+        });
+    </script>
+</body>
+</html>
