@@ -52,7 +52,7 @@ ESP32 GPIO 0 → Botão BOOT (reset de fábrica)
 
 1. Após upload, o ESP32 criará uma rede WiFi: `CafeZinho-Setup`
 2. Senha: `cafezinho123`
-3. Conecte-se e acesse: `http://192.168.4.1`
+3. Conecte-se e acesse: `http://cafezinho.local` ou `http://ip-serial-monitor`
 4. Configure sua rede WiFi nas configurações
 
 ## Uso
@@ -104,16 +104,6 @@ POST /api/config     # Salvar configurações
 - Verifique conexão WiFi (NTP necessário)
 - Ative o modo automático
 - Configure dias da semana
-
-## Estrutura dos Arquivos
-
-```
-cafezinho/
-├── cafezinho.ino      # Código principal ESP32
-├── data/
-│   └── index.html     # Interface web
-└── README.md          # Este arquivo
-```
 
 ## Licença
 
